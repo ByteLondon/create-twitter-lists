@@ -1,16 +1,14 @@
 import config from './config'
 import * as fs from 'fs'
-import parse from 'csv-parse'
+import * as parse from 'csv-parse'
 import async from 'async'
 import list from './list'
 
 const inputFile = 'members.csv'
-const asyncTasks = []
+const asyncTasks: Function[] = []
 
 const parser = parse({ delimiter: ',' }, function (err, data) {
-  const membersToAdd = data[0].filter(function (member) {
-    return member.length
-  })
+  const membersToAdd = data[0].filter((member) => member.length)
 
   const numMembers = membersToAdd.length
   if (numMembers > 5000) {
@@ -22,7 +20,7 @@ const parser = parse({ delimiter: ',' }, function (err, data) {
     return handle.replace('@', '').trim()
   })
 
-  const membersToAddArr = []
+  const membersToAddArr: string[] = []
   while (membersToAdd.length) {
     const members = membersToAdd
       .splice(0, 51)
@@ -34,7 +32,7 @@ const parser = parse({ delimiter: ',' }, function (err, data) {
   }
 
   membersToAddArr.forEach(function (members) {
-    asyncTasks.push(function (callback) {
+    asyncTasks.push((callback) => {
       setTimeout(function () {
         const membersAdded = function (err) {
           if (err) {

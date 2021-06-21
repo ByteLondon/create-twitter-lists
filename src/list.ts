@@ -1,45 +1,45 @@
-var Twitter = require('twitter'),
-config = require('./config');
+import * as Twitter from 'twitter'
+import config from './config'
 
-module.exports = {
-  addMembersToList: function(listName, ownerScreenName, membersToAdd, callback) {
-    var postParams = {
+export default {
+  addMembersToList: function (listName, ownerScreenName, membersToAdd, callback) {
+    const postParams = {
       slug: listName,
       owner_screen_name: ownerScreenName,
-      screen_name: membersToAdd
-    };
+      screen_name: membersToAdd,
+    }
 
-    var client = new Twitter(config.auth.twitter);
-    client.post('lists/members/create_all', postParams,  function(err, listDetails, response) {
-      if(err) {
-        return callback&&callback(err);
+    const client = new Twitter(config.auth.twitter)
+    client.post('lists/members/create_all', postParams, function (err, listDetails, response) {
+      if (err) {
+        return callback && callback(err)
       }
-      console.log("Succesfully added " + listDetails.member_count + " members to "+ listName);
+      console.log('Succesfully added ' + listDetails.member_count + ' members to ' + listName)
 
-      return callback&&callback();
-    });
+      return callback && callback()
+    })
   },
-  getMembers: function(listName, ownerScreenName, numUsers, callback) {
-    var getParams = {
+  getMembers: function (listName, ownerScreenName, numUsers, callback) {
+    const getParams = {
       slug: listName,
       owner_screen_name: ownerScreenName,
       count: numUsers,
-      include_entities: false
-    };
+      include_entities: false,
+    }
 
-    var client = new Twitter(config.auth.twitter);
-    client.get('lists/members', getParams,  function(err, members, response) {
-      if(err) {
-        return callback&&callback(err);
+    const client = new Twitter(config.auth.twitter)
+    client.get('lists/members', getParams, function (err, members, response) {
+      if (err) {
+        return callback && callback(err)
       }
 
-      var listMemberHandles = [];
-      for(var i in members.users) {
-        var member = members.users[i];
-        listMemberHandles.push(member.screen_name);
+      const listMemberHandles: string[] = []
+      for (const i in members.users) {
+        const member = members.users[i]
+        listMemberHandles.push(member.screen_name)
       }
 
-      return callback&&callback(null, listMemberHandles);
-    });
-  }
+      return callback && callback(null, listMemberHandles)
+    })
+  },
 }
